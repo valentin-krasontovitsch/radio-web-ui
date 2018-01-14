@@ -1,6 +1,13 @@
 <template>
   <div class="connection-status">
-    <h1>{{ connectionStatus }}</h1>
+    <button v-if="connected" class="mdc-button" disabled>
+      <i class="material-icons mdc-button__icon">
+        bluetooth_connected
+      </i>
+    </button>
+    <button v-if="!connected" class="mdc-button" v-on:click="connect">
+      Connect
+    </button>
   </div>
 </template>
 
@@ -9,7 +16,17 @@ export default {
   name: 'Connection',
   data () {
     return {
-      connectionStatus: false
+      connected: false,
+      radio_api: 'http://raspberrypi.local:8080'
+    }
+  },
+  methods: {
+    connect: function (event) {
+      this.$http.get(this.radio_api + '/connect').then(response => {
+        this.connected = true
+      }).catch(error => {
+        console.log(error)
+      })
     }
   }
 }
